@@ -17,7 +17,7 @@ namespace ShevaDorot
     public partial class FormMain : Form
     {
         FirebaseDBManager firebaseDBManager;
-        List<System.Drawing.Image> usersImages;
+        Dictionary<string, System.Drawing.Image> usersImages;
         Dictionary<string, string> regions = new Dictionary<string, string>();
         Dictionary<string, string> statuses = new Dictionary<string, string>();
         Dictionary<string, string> genders = new Dictionary<string, string>();
@@ -227,7 +227,8 @@ namespace ShevaDorot
         {
             if (string.IsNullOrEmpty(textBoxFirstName.Text) ||
                 string.IsNullOrEmpty(textBoxLastName.Text) ||
-                string.IsNullOrEmpty(textBoxPhoneNumber.Text))
+                string.IsNullOrEmpty(textBoxPhoneNumber.Text) ||
+                comboBoxGender2.SelectedItem == null)
             {
                 return false;
             }
@@ -272,11 +273,23 @@ namespace ShevaDorot
             string msg = null;
             try
             {
-                var users = firebaseDBManager.FirebaseClient.Child("users");
-                await users.PutAsync(user);
-                msg = string.Format("New user with the name: {0}, was created successfuly!", user.first_name);
+                if (isValidEntry())
+                {
+                    if ((!string.IsNullOrEmpty(textBoxImageUrl.Text)) && (!string.IsNullOrEmpty(openFileDialogUserImage.FileName)))
+                    {
+                        string file = openFileDialogUserImage.FileName;
+                        string downloadUrl = await firebaseDBManager.insertUserNewPhoto(user, file);
+                        Image image = new Image(textBoxImageUrl.Text);
+                        image.url = downloadUrl;
+                        user.images = new Image[] { image };
+                        user.profile_image_id = downloadUrl;
+                    }
 
-                clearTextBoxControls(panelCreateForm.Controls);
+                    firebaseDBManager.InsertUser(user);
+                    msg = string.Format("New user with the name: {0}, was created successfuly!", user.first_name);
+
+                    clearTextBoxControls(panelCreateForm.Controls);
+                }
             }
             catch (Exception ex)
             {
@@ -295,14 +308,15 @@ namespace ShevaDorot
             user.email = textBoxEmail.Text;
             user.first_name = textBoxFirstName.Text;
             user.height = textBoxHeight.Text;
-            user.profile_image_id = textBoxImageUrl.Text;
+            //user.profile_image_id = textBoxImageUrl.Text;
             user.last_name = textBoxLastName.Text;
             user.characteritics = textBoxMyCharacteritics.Text;
+            user.spouse_characteritics = textBoxSpouseCharacteritics.Text;
             user.occupation = textBoxOccupation.Text;
             user.phone_number = textBoxPhoneNumber.Text;
-            user.spouse_characteritics = textBoxSpouseCharacteritics.Text;
             user.region = comboBoxRegion.SelectedValue.ToString();
             user.religious_affiliation = comboBoxRelAff.SelectedValue.ToString();
+            user.religious_level = comboBoxRelAff.SelectedValue.ToString();
             user.status = comboBoxStatus.SelectedValue.ToString();
             user.gender = comboBoxGender2.SelectedValue.ToString();
             return user;
@@ -358,7 +372,7 @@ namespace ShevaDorot
             var users2 = users.Where(u => u.Object?.age != null && int.Parse(u.Object?.age) >= int.Parse(startAge.ToString()))
                  .Where(u => int.Parse(u.Object?.age) <= int.Parse(endAge.ToString()))
                  .Where(u => u.Object?.gender == gender)
-                 .Where(u => u.Object?.religious_affiliation == religious);
+                 .Where(u => u.Object?.religious_level == religious);
 
             // if user want a picture "image-url" must contain an image
             if (withImage)
@@ -368,9 +382,11 @@ namespace ShevaDorot
 
             var validUsers = new List<User>();
 
-            foreach (FirebaseObject<User> userObject in users2.ToList()) {
-
-                validUsers.Add(userObject.Object);
+            foreach (FirebaseObject<User> userObject in users2.ToList())
+            {
+                User user = userObject.Object;
+                user.id = userObject.Key;
+                validUsers.Add(user);
             }
 
             if (validUsers.Count() > 0)
@@ -386,14 +402,17 @@ namespace ShevaDorot
             }
         }
 
-        private List<System.Drawing.Image> getUsersImages(List<User> validUsers)
+        private Dictionary<string, System.Drawing.Image> getUsersImages(List<User> validUsers)
         {
-            List<System.Drawing.Image> imagesLIst = new List<System.Drawing.Image>();
+            Dictionary<string, System.Drawing.Image> imagesLIst = new Dictionary<string, System.Drawing.Image>();
             foreach (User user in validUsers)
             {
-                string imageDownloadUrl = user.images[0].url;
-                System.Drawing.Image image = getImageFromUrl(imageDownloadUrl);
-                imagesLIst.Add(image);
+                if (user.images != null && user.images.Length > 0)
+                {
+                    string imageDownloadUrl = user.images[0].url;
+                    System.Drawing.Image image = getImageFromUrl(imageDownloadUrl);
+                    imagesLIst.Add(imageDownloadUrl, image);
+                }
             }
 
             return imagesLIst;
@@ -424,16 +443,28 @@ namespace ShevaDorot
 
         private void dataGridViewSearch_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            
-            if (e.ColumnIndex == 24)
+            if (dataGridViewSearch.Columns[e.ColumnIndex].Name == "profileimageidDataGridViewTextBoxColumn")
             {
-                if (usersImages == null || e.RowIndex >= usersImages.Count)
+                if (usersImages == null)
                 {
                     e.Value = null;
-                    return;
                 }
-
-                e.Value = usersImages[e.RowIndex];
+                else
+                {
+                    User user = (User)dataGridViewSearch.Rows[e.RowIndex].DataBoundItem;
+                    try
+                    {
+                        if (!string.IsNullOrEmpty(user.profile_image_id) && usersImages[user.profile_image_id] != null)
+                        {
+                            e.Value = usersImages[user.profile_image_id];
+                            e.FormattingApplied = true;
+                        }
+                    }
+                    catch (KeyNotFoundException ex)
+                    {
+                        //
+                    }
+                }
             }
         }
 
@@ -560,7 +591,7 @@ namespace ShevaDorot
             dataGridViewSearch.Rows.Clear();
         }
 
-        private void buttonUpdate_Click(object sender, EventArgs e)
+        private async void buttonUpdate_Click(object sender, EventArgs e)
         {
             if (isValidEntry())
             {
@@ -572,14 +603,17 @@ namespace ShevaDorot
                     string file = openFileDialogUserImage.FileName;
                     try
                     {
-                        firebaseDBManager.DeleteUserPhoto(selectedUser);
-                        firebaseDBManager.insertUserNewPhoto(selectedUser, file);
-                        selectedUser.images[0] = new Image(textBoxImageUrl.Text);
+                        //firebaseDBManager.DeleteUserPhoto(selectedUser);
+                        string downloadUrl = await firebaseDBManager.insertUserNewPhoto(selectedUser, file);
+                        Image image = new Image(textBoxImageUrl.Text);
+                        image.url = downloadUrl;
+                        selectedUser.images[0] = image;
+                        selectedUser.profile_image_id = downloadUrl;
                         firebaseDBManager.updateUser(selectedUser);
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        MessageBox.Show("Error while trying to create an image in firebase!");
+                        MessageBox.Show("Error while trying to create an image in firebase! " + ex.Message);
                     }
                 }
             }

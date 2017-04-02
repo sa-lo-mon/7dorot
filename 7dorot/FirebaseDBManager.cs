@@ -39,8 +39,9 @@ namespace ShevaDorot
 
             AuthProvider = new FirebaseAuthProvider(new FirebaseConfig(FIREBASE_API_KEY));
             AuthLink = await AuthProvider.SignInWithEmailAndPasswordAsync(FIREBASE_USER_NAME, FIREBASE_PASSWORD);
-            
-            FirebaseClient = new FirebaseClient(FIREBASE_DATABASE, new FirebaseOptions {
+
+            FirebaseClient = new FirebaseClient(FIREBASE_DATABASE, new FirebaseOptions
+            {
                 AuthTokenAsyncFactory = () => Task.FromResult(AuthLink.FirebaseToken)
             });
 
@@ -54,47 +55,55 @@ namespace ShevaDorot
 
         internal async void DeleteUserPhoto(User user)
         {
-            if (user.gender.Equals("1")) // if gender is male
+            try
             {
-                await MenAlbumRef.Child(user.images[0].url).DeleteAsync();
+                FirebaseStorageReference imageRef;
+                if (user.gender.Equals("1")) // if gender is male
+                {
+                    imageRef = MenAlbumRef.Child(user.images[0].url);
+                }
+                else
+                {
+                    imageRef = WomenAlbumRef.Child(user.images[0].url);
+                }
+
+                await imageRef.DeleteAsync();
             }
-            else
+            catch (Exception ex)
             {
-                await WomenAlbumRef.Child(user.images[0].url).DeleteAsync();
+                Console.WriteLine(ex.Message);
             }
         }
 
-        internal async void insertUserNewPhoto(User user, string file)
+        internal async Task<string> insertUserNewPhoto(User user, string file)
         {
             FileInfo fileInfo = new FileInfo(file);
             FileStream fileStream = fileInfo.OpenRead();
 
+            string downloadUrl;
+            string fileName = string.Format("{0}_{1}", user.email, fileInfo.Name);
             if (user.gender.Equals("1"))
             {
-                await MenAlbumRef.PutAsync(fileStream);
+                downloadUrl = await MenAlbumRef.Child(fileName).PutAsync(fileStream);
             }
             else
             {
-                await WomenAlbumRef.PutAsync(fileStream);
+                downloadUrl = await WomenAlbumRef.Child(fileName).PutAsync(fileStream);
             }
 
             fileStream.Close();
+            return downloadUrl;
         }
 
         internal async void updateUser(User selectedUser)
         {
-            if (selectedUser.gender.Equals("1"))
-            {
-                //await menAlbumRef.Child("")
-                Console.WriteLine("updating men user...");
-            }
-            else
-            {
-                //await womenAlbumRef.Child("")
-                Console.WriteLine("updating women user...");
-            }
+            await FirebaseClient.Child("users/" + selectedUser.id).PutAsync(selectedUser);
+        }
 
-            await FirebaseClient.Child("users").Client.Child(selectedUser.id).PostAsync(selectedUser);
+        internal async void InsertUser(User user)
+        {
+            var child = FirebaseClient.Child("users");
+            FirebaseObject<User> newUser = await child.PostAsync(user, true);
         }
     }
 

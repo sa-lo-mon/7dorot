@@ -105,6 +105,7 @@
             this.eyescolorDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.facebookidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.familystatusDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.hairDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.headdressDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.healthstatusDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -113,6 +114,7 @@
             this.imageexposureDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.koshertypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.languagesDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.locationDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.luckDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.militaryserviceDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -129,9 +131,11 @@
             this.emailDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.phonenumberDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.regionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.genderDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.spousecharacteriticsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.statusDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             label14 = new System.Windows.Forms.Label();
             label15 = new System.Windows.Forms.Label();
             label11 = new System.Windows.Forms.Label();
@@ -521,6 +525,7 @@
             this.eyescolorDataGridViewTextBoxColumn,
             this.facebookidDataGridViewTextBoxColumn,
             this.familystatusDataGridViewTextBoxColumn,
+            this.dataGridViewTextBoxColumn1,
             this.hairDataGridViewTextBoxColumn,
             this.headdressDataGridViewTextBoxColumn,
             this.healthstatusDataGridViewTextBoxColumn,
@@ -529,6 +534,7 @@
             this.imageexposureDataGridViewTextBoxColumn,
             this.koshertypeDataGridViewTextBoxColumn,
             this.languagesDataGridViewTextBoxColumn,
+            this.dataGridViewTextBoxColumn2,
             this.locationDataGridViewTextBoxColumn,
             this.luckDataGridViewTextBoxColumn,
             this.militaryserviceDataGridViewTextBoxColumn,
@@ -545,9 +551,11 @@
             this.emailDataGridViewTextBoxColumn,
             this.phonenumberDataGridViewTextBoxColumn,
             this.regionDataGridViewTextBoxColumn,
+            this.dataGridViewTextBoxColumn3,
             this.genderDataGridViewTextBoxColumn,
             this.spousecharacteriticsDataGridViewTextBoxColumn,
-            this.statusDataGridViewTextBoxColumn});
+            this.statusDataGridViewTextBoxColumn,
+            this.idDataGridViewTextBoxColumn});
             this.dataGridViewSearch.Cursor = System.Windows.Forms.Cursors.Hand;
             this.dataGridViewSearch.DataSource = this.bindingSourceSearch;
             this.dataGridViewSearch.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -778,7 +786,6 @@
             // 
             // pictureBoxUserImage
             // 
-            this.pictureBoxUserImage.DataBindings.Add(new System.Windows.Forms.Binding("Image", this.bindingSourceSearch, "profile_image_id", true));
             this.pictureBoxUserImage.Location = new System.Drawing.Point(318, 19);
             this.pictureBoxUserImage.Name = "pictureBoxUserImage";
             this.pictureBoxUserImage.Size = new System.Drawing.Size(183, 180);
@@ -789,7 +796,8 @@
             // textBoxImageUrl
             // 
             this.textBoxImageUrl.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceSearch, "profile_image_id", true));
-            this.textBoxImageUrl.Location = new System.Drawing.Point(318, 212);
+            this.textBoxImageUrl.Enabled = false;
+            this.textBoxImageUrl.Location = new System.Drawing.Point(318, 211);
             this.textBoxImageUrl.Name = "textBoxImageUrl";
             this.textBoxImageUrl.Size = new System.Drawing.Size(100, 20);
             this.textBoxImageUrl.TabIndex = 7;
@@ -976,6 +984,14 @@
             this.familystatusDataGridViewTextBoxColumn.ReadOnly = true;
             this.familystatusDataGridViewTextBoxColumn.Width = 92;
             // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.DataPropertyName = "first_name";
+            this.dataGridViewTextBoxColumn1.HeaderText = "first_name";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.ReadOnly = true;
+            this.dataGridViewTextBoxColumn1.Width = 80;
+            // 
             // hairDataGridViewTextBoxColumn
             // 
             this.hairDataGridViewTextBoxColumn.DataPropertyName = "hair";
@@ -1040,6 +1056,14 @@
             this.languagesDataGridViewTextBoxColumn.ReadOnly = true;
             this.languagesDataGridViewTextBoxColumn.Width = 81;
             // 
+            // dataGridViewTextBoxColumn2
+            // 
+            this.dataGridViewTextBoxColumn2.DataPropertyName = "last_name";
+            this.dataGridViewTextBoxColumn2.HeaderText = "last_name";
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            this.dataGridViewTextBoxColumn2.ReadOnly = true;
+            this.dataGridViewTextBoxColumn2.Width = 80;
+            // 
             // locationDataGridViewTextBoxColumn
             // 
             this.locationDataGridViewTextBoxColumn.DataPropertyName = "location";
@@ -1090,7 +1114,6 @@
             // 
             // profileimageidDataGridViewTextBoxColumn
             // 
-            this.profileimageidDataGridViewTextBoxColumn.DataPropertyName = "profile_image_id";
             this.profileimageidDataGridViewTextBoxColumn.HeaderText = "profile_image_id";
             this.profileimageidDataGridViewTextBoxColumn.Name = "profileimageidDataGridViewTextBoxColumn";
             this.profileimageidDataGridViewTextBoxColumn.ReadOnly = true;
@@ -1170,6 +1193,14 @@
             this.regionDataGridViewTextBoxColumn.ReadOnly = true;
             this.regionDataGridViewTextBoxColumn.Width = 61;
             // 
+            // dataGridViewTextBoxColumn3
+            // 
+            this.dataGridViewTextBoxColumn3.DataPropertyName = "religious_affiliation";
+            this.dataGridViewTextBoxColumn3.HeaderText = "religious_affiliation";
+            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            this.dataGridViewTextBoxColumn3.ReadOnly = true;
+            this.dataGridViewTextBoxColumn3.Width = 117;
+            // 
             // genderDataGridViewTextBoxColumn
             // 
             this.genderDataGridViewTextBoxColumn.DataPropertyName = "gender";
@@ -1193,6 +1224,14 @@
             this.statusDataGridViewTextBoxColumn.Name = "statusDataGridViewTextBoxColumn";
             this.statusDataGridViewTextBoxColumn.ReadOnly = true;
             this.statusDataGridViewTextBoxColumn.Width = 60;
+            // 
+            // idDataGridViewTextBoxColumn
+            // 
+            this.idDataGridViewTextBoxColumn.DataPropertyName = "id";
+            this.idDataGridViewTextBoxColumn.HeaderText = "id";
+            this.idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
+            this.idDataGridViewTextBoxColumn.ReadOnly = true;
+            this.idDataGridViewTextBoxColumn.Width = 40;
             // 
             // FormMain
             // 
@@ -1300,6 +1339,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn eyescolorDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn facebookidDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn familystatusDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn hairDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn headdressDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn healthstatusDataGridViewTextBoxColumn;
@@ -1308,6 +1348,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn imageexposureDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn koshertypeDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn languagesDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn locationDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn luckDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn militaryserviceDataGridViewTextBoxColumn;
@@ -1324,9 +1365,11 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn emailDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn phonenumberDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn regionDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
         private System.Windows.Forms.DataGridViewTextBoxColumn genderDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn spousecharacteriticsDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn statusDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
     }
 }
 

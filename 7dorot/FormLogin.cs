@@ -1,7 +1,5 @@
 ﻿using Firebase.Database;
-using MongoDB.Driver;
-using MongoDB.Driver.Builders;
-using MongoDB.Driver.Linq;
+using ShevaDorot.DAL;
 using ShevaDorot.Properties;
 using System;
 using System.Collections.Generic;
@@ -13,17 +11,17 @@ namespace ShevaDorot
 {
     public partial class FormLogin : Form
     {
-        FirebaseDBManager firebaseDBManager = null;
+        DBManager firebaseDBManager = null;
         public FormLogin()
         {
             InitializeComponent();
-            firebaseDBManager = new FirebaseDBManager();
+            firebaseDBManager = new DBManager();
         }
 
         private async void buttonLogin_Click(object sender, EventArgs e)
         {
             if (firebaseDBManager == null)
-                firebaseDBManager = new FirebaseDBManager();
+                firebaseDBManager = new DBManager();
 
             var admins = await firebaseDBManager.FirebaseClient.Child("admins").OnceAsync<Admin>();
             string userName = textBoxUserName.Text;

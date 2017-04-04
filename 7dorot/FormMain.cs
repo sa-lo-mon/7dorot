@@ -1,10 +1,10 @@
 ﻿using Firebase.Database;
 using Firebase.Storage;
-using MongoDB.Driver;
-using MongoDB.Driver.Linq;
+using ShevaDorot.DAL;
 using ShevaDorot.Properties;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -16,24 +16,20 @@ namespace ShevaDorot
 {
     public partial class FormMain : Form
     {
-        FirebaseDBManager firebaseDBManager;
+        DBManager firebaseDBManager;
         Dictionary<string, System.Drawing.Image> usersImages;
-        Dictionary<string, string> regions = new Dictionary<string, string>();
-        Dictionary<string, string> statuses = new Dictionary<string, string>();
-        Dictionary<string, string> genders = new Dictionary<string, string>();
-        Dictionary<string, string> relAffs = new Dictionary<string, string>();
 
         public FormMain()
         {
             InitializeComponent();
-            InitializeControls();
+            InitializeSearchFormControls();
             InitializeServices();
             tabPageCreate.Enabled = false;
         }
 
         private void InitializeServices()
         {
-            firebaseDBManager = new FirebaseDBManager();
+            firebaseDBManager = new DBManager();
             dataGridViewSearch.DataSource = bindingSourceSearch;
         }
 
@@ -47,140 +43,71 @@ namespace ShevaDorot
             return await task;
         }
 
-        private void InitializeControls()
+        private void InitializeSearchFormControls()
         {
-            InitReligiousAffiliation();
-            InitGender();
-            InitRegion();
-            InitStatus();
+            InitReligiousLevelSearchForm();
+            InitGenderSearchForm();
+            InitFamilyStatusSearchForm();
+            InitPrayerFrequencySearchForm();
+            InitEtnicitySearchForm();
+            InitEducationSearchForm();
+            InitEconomicStatusSearchForm();
+            InitSmokingHabitsSearchForm();
         }
 
-        private void InitStatus()
+        private void BindControlData(ListControl contorl, SpinnerData data)
         {
-            foreach (Status item in Enum.GetValues(typeof(Status)))
-            {
-                string key = GetStatusName(item);
-                string value = ((int)item).ToString();
-                statuses.Add(key, value);
-            }
-            comboBoxStatus.DataSource = new BindingSource(statuses, null);
-            comboBoxStatus.DisplayMember = "Key";
-            comboBoxStatus.ValueMember = "Value";
+            contorl.DataSource = new BindingSource(data.GetTypes(), null);
+            contorl.DisplayMember = "Value";
+            contorl.ValueMember = "Key";
         }
 
-        private string GetStatusName(Status item)
+        private void InitSmokingHabitsSearchForm()
         {
-            string name = string.Empty;
-            switch (item)
-            {
-                case Status.Single:
-                    name = "רווק";
-                    break;
-                case Status.Divorced:
-                    name = "גרוש";
-                    break;
-                case Status.Widow:
-                    name = "אלמן";
-                    break;
-                default:
-                    break;
-            }
-            return name;
+            SmokingHabitType smokingHabitTypes = new SmokingHabitType();
+            BindControlData(checkedListBoxSmokingHabits, smokingHabitTypes);
         }
 
-        private void InitRegion()
+        private void InitEconomicStatusSearchForm()
         {
-            foreach (Region item in Enum.GetValues(typeof(Region)))
-            {
-                string key = GetRegionName(item);
-                string value = ((int)item).ToString();
-                regions.Add(key, value);
-            }
-            comboBoxRegion.DataSource = new BindingSource(regions, null);
-            comboBoxRegion.DisplayMember = "Key";
-            comboBoxRegion.ValueMember = "Value";
+            EconomicStatusType economicStatusType = new EconomicStatusType();
+            BindControlData(checkedListBoxEconomicStatus, economicStatusType);
         }
 
-        private string GetRegionName(Region item)
+        private void InitEducationSearchForm()
         {
-            string name = string.Empty;
-            switch (item)
-            {
-                case ShevaDorot.Region.North:
-                    name = "צפון";
-                    break;
-                case ShevaDorot.Region.Center:
-                    name = "מרכז";
-                    break;
-                case ShevaDorot.Region.South:
-                    name = "דרום";
-                    break;
-                default:
-                    break;
-            }
-            return name;
+            EducationType educationType = new EducationType();
+            BindControlData(checkedListBoxEducation, educationType);
         }
 
-        private void InitGender()
+        private void InitEtnicitySearchForm()
         {
-            foreach (Gender item in Enum.GetValues(typeof(Gender)))
-            {
-                string key = GetGenderName(item);
-                string value = ((int)item).ToString();
-                genders.Add(key, value);
-            }
-            BindingSource genderBindSource = new BindingSource(genders, null);
-            comboBoxGender.DataSource = genderBindSource;
-            comboBoxGender.DisplayMember = "Key";
-            comboBoxGender.ValueMember = "Value";
-            comboBoxGender2.DataSource = genderBindSource;
-            comboBoxGender2.DisplayMember = "Key";
-            comboBoxGender2.ValueMember = "Value";
+            EtnicityType etnicityType = new EtnicityType();
+            BindControlData(checkedListBoxEtnicity, etnicityType);
         }
 
-        private string GetGenderName(Gender item)
+        private void InitPrayerFrequencySearchForm()
         {
-            string name = string.Empty;
-            switch (item)
-            {
-                case Gender.Man: name = "גבר"; break;
-                case Gender.Woman: name = "אישה"; break;
-                default: name = "לא מוגדר"; break;
-            }
-            return name;
+            PrayerFrequencyType prayerFrequencyType = new PrayerFrequencyType();
+            BindControlData(checkedListBoxPrayerFrequency, prayerFrequencyType);
         }
 
-        private void InitReligiousAffiliation()
+        private void InitFamilyStatusSearchForm()
         {
-            foreach (ReligiousAffiliation item in Enum.GetValues(typeof(ReligiousAffiliation)))
-            {
-                string key = GetRelAffName(item);
-                string value = ((int)item).ToString();
-                relAffs.Add(key, value);
-            }
-
-            BindingSource relAffBindingSource = new BindingSource(relAffs, null);
-            comboBoxReligiousAffiliation.DataSource = relAffBindingSource;
-            comboBoxReligiousAffiliation.DisplayMember = "Key";
-            comboBoxReligiousAffiliation.ValueMember = "Value";
-            comboBoxRelAff.DataSource = relAffBindingSource;
-            comboBoxRelAff.DisplayMember = "Key";
-            comboBoxRelAff.ValueMember = "Value";
+            FamilyStatusType familyStatusType = new FamilyStatusType();
+            BindControlData(checkedListBoxFamilyStatus, familyStatusType);
         }
 
-        private string GetRelAffName(ReligiousAffiliation item)
+        private void InitGenderSearchForm()
         {
-            string name = string.Empty;
-            switch (item)
-            {
-                case ReligiousAffiliation.Religious: name = "דתי"; break;
-                case ReligiousAffiliation.NationalReligious: name = "דתי-לאומי"; break;
-                case ReligiousAffiliation.Orthodox: name = "חרדי"; break;
-                case ReligiousAffiliation.NationalOrthodox: name = "חרדי-לאומי"; break;
-                case ReligiousAffiliation.Traditional: name = "מסורתי"; break;
-                default: name = "לא מוגדר"; break;
-            }
-            return name;
+            GenderType genderType = new GenderType();
+            BindControlData(comboBoxGender, genderType);
+        }
+
+        private void InitReligiousLevelSearchForm()
+        {
+            ReligiousType relType = new ReligiousType();
+            BindControlData(checkedListBoxReligiousLevel, relType);
         }
 
         private void FormMain_Load(object sender, EventArgs e)
@@ -278,7 +205,7 @@ namespace ShevaDorot
                     if ((!string.IsNullOrEmpty(textBoxImageUrl.Text)) && (!string.IsNullOrEmpty(openFileDialogUserImage.FileName)))
                     {
                         string file = openFileDialogUserImage.FileName;
-                        string downloadUrl = await firebaseDBManager.insertUserNewPhoto(user, file);
+                        string downloadUrl = await firebaseDBManager.InsertUserNewPhoto(user, file);
                         Image image = new Image(textBoxImageUrl.Text);
                         image.url = downloadUrl;
                         user.images = new Image[] { image };
@@ -303,22 +230,41 @@ namespace ShevaDorot
         {
             User user = new User();
             user.age = textBoxAge.Text;
-            user.performance = textBoxAppearance.Text;
-            user.education = textBoxEducation.Text;
+            user.performance = (string)comboBoxPerformance.SelectedValue;
+
+            string selectedEducation = "";
+            foreach (KeyValuePair<string, SpinnerData> item in checkedListBoxEducation2.CheckedItems)
+            {
+
+                selectedEducation += item.Key + ",";
+            }
+            user.education = selectedEducation;
             user.email = textBoxEmail.Text;
             user.first_name = textBoxFirstName.Text;
-            user.height = textBoxHeight.Text;
+            user.height = (string)comboBoxHeight.SelectedValue;
             //user.profile_image_id = textBoxImageUrl.Text;
             user.last_name = textBoxLastName.Text;
-            user.characteritics = textBoxMyCharacteritics.Text;
-            user.spouse_characteritics = textBoxSpouseCharacteritics.Text;
-            user.occupation = textBoxOccupation.Text;
+
+            string selectedCharacteristics = "";
+            foreach (KeyValuePair<string, SpinnerData> item in checkedListBoxMyCharacteristics.CheckedItems)
+            {
+                selectedCharacteristics += item.Key + ",";
+            }
+            user.characteritics = selectedCharacteristics;
+
+            string spouseCharacteristics = "";
+            foreach (KeyValuePair<string, SpinnerData> item in checkedListBoxSpouseCharacteristics.CheckedItems)
+            {
+                spouseCharacteristics += item.Key + ",";
+            }
+            user.spouse_characteritics = spouseCharacteristics;
+
+            user.occupation = (string)comboBoxOccupation.SelectedValue;
             user.phone_number = textBoxPhoneNumber.Text;
-            user.region = comboBoxRegion.SelectedValue.ToString();
-            user.religious_affiliation = comboBoxRelAff.SelectedValue.ToString();
-            user.religious_level = comboBoxRelAff.SelectedValue.ToString();
-            user.status = comboBoxStatus.SelectedValue.ToString();
-            user.gender = comboBoxGender2.SelectedValue.ToString();
+            user.region = (string)comboBoxRegion.SelectedValue;
+            user.religious_level = (string)comboBoxRelLevel.SelectedValue;
+            user.status = (string)comboBoxFamilyStatus.SelectedValue;
+            user.gender = (string)comboBoxGender2.SelectedValue;
             return user;
         }
 
@@ -365,8 +311,8 @@ namespace ShevaDorot
 
             int startAge = (int)numericUpDownFrom.Value;
             int endAge = (int)numericUpDownUntilAge.Value;
-            string gender = ((KeyValuePair<string, string>)comboBoxGender.SelectedItem).Value;
-            string religious = ((KeyValuePair<string, string>)comboBoxReligiousAffiliation.SelectedItem).Value;
+            string gender = ((KeyValuePair<string, SpinnerData>)comboBoxGender.SelectedItem).Key;
+            string religious = ((KeyValuePair<string, SpinnerData>)checkedListBoxReligiousLevel.SelectedItem).Key;
             bool withImage = checkBoxWithPicture.Checked;
 
             var users2 = users.Where(u => u.Object?.age != null && int.Parse(u.Object?.age) >= int.Parse(startAge.ToString()))
@@ -394,7 +340,7 @@ namespace ShevaDorot
                 // i got the users here. now i need to get their images!
                 usersImages = getUsersImages(validUsers);
 
-                bindingSourceSearch.DataSource = validUsers;
+                bindingSourceSearch.DataSource = new BindingList<User>(validUsers);
             }
             else
             {
@@ -411,6 +357,10 @@ namespace ShevaDorot
                 {
                     string imageDownloadUrl = user.images[0].url;
                     System.Drawing.Image image = getImageFromUrl(imageDownloadUrl);
+                    if (image != null)
+                    {
+                        image = image.GetThumbnailImage(100, 100, null, IntPtr.Zero);
+                    }
                     imagesLIst.Add(imageDownloadUrl, image);
                 }
             }
@@ -426,7 +376,7 @@ namespace ShevaDorot
             int startAge = (int)numericUpDownFrom.Value;
             int endAge = (int)numericUpDownUntilAge.Value;
             string gender = comboBoxGender.SelectedText;
-            string religious = comboBoxReligiousAffiliation.Text;
+            string religious = comboBoxRelLevel.SelectedText;
             bool withImage = checkBoxWithPicture.Checked;
 
             if ((userAge >= startAge && userAge <= endAge) &&
@@ -462,7 +412,8 @@ namespace ShevaDorot
                     }
                     catch (KeyNotFoundException ex)
                     {
-                        //
+                        //key not found
+                        Console.WriteLine(ex.Message);
                     }
                 }
             }
@@ -507,9 +458,77 @@ namespace ShevaDorot
                 }
 
                 tabPageCreate.Enabled = true;
-                this.tabControlMain.SelectTab(tabPageCreate.Name);
+                tabControlMain.SelectTab(tabPageCreate.Name);
+                InitCreateFormFields();
+                User user = (User)dataGridViewSearch.SelectedRows[0].DataBoundItem;
+
+                //TODO: load selected search user details into search form fields!
+                LoadCreateFormFromUser(user);
+
                 buttonUpdate.Show();
                 buttonCreate.Hide();
+            }
+        }
+
+        private void LoadCreateFormFromUser(User user)
+        {
+            textBoxAge.Text = user.age;
+            comboBoxPerformance.SelectedValue = user.performance;
+            
+            textBoxEmail.Text = user.email;
+            textBoxFirstName.Text = user.first_name;
+            comboBoxHeight.SelectedValue = user.height;
+
+            //textBoxImageUrl.Text = user.profile_image_id;
+            textBoxLastName.Text = user.last_name;
+            comboBoxOccupation.SelectedValue = user.occupation;
+            textBoxPhoneNumber.Text = user.phone_number;
+            comboBoxRegion.SelectedValue = user.region;
+            comboBoxRelLevel.SelectedValue = user.religious_level;
+            comboBoxFamilyStatus.SelectedValue = user.status;
+            comboBoxGender2.SelectedValue = user.gender;
+
+            CheckCheckedkListBoxByString(checkedListBoxEducation2, user.education);
+            CheckCheckedkListBoxByString(checkedListBoxMyCharacteristics, user.characteritics);
+            CheckCheckedkListBoxByString(checkedListBoxSpouseCharacteristics, user.spouse_characteritics);
+        }
+
+        private void CheckCheckedkListBoxByString(CheckedListBox checkedListBox, string selectedIndices)
+        {
+            string[] indices = selectedIndices.Split(',');
+            for (int i = 0; i < checkedListBox.Items.Count; i++)
+            {
+                KeyValuePair<string, SpinnerData> item = (KeyValuePair<string, SpinnerData>)checkedListBox.Items[i];
+                if (!string.IsNullOrEmpty(indices.FirstOrDefault(s => s.Equals(item.Key))))
+                {
+                    checkedListBox.SetItemChecked(i, true);
+                }
+            }
+        }
+
+        private void ResetControls(Control contorl)
+        {
+            if (contorl == null)
+                return;
+
+            if (contorl is TextBox)
+            {
+                (contorl as TextBox).ResetText();
+            }
+            else if (contorl is ComboBox)
+            {
+                (contorl as ComboBox).SelectedIndex = -1;
+            }
+            else if (contorl is ListBox)
+            {
+                (contorl as ListBox).ClearSelected();
+            }
+            else
+            {
+                foreach (Control ctrl in contorl.Controls)
+                {
+                    ResetControls(ctrl);
+                }
             }
         }
 
@@ -521,7 +540,82 @@ namespace ShevaDorot
             clearTextBoxControls(panelCreateForm.Controls);
             buttonUpdate.Hide();
             buttonCreate.Show();
+            InitCreateFormFields();
             this.tabControlMain.SelectTab(tabPageCreate.Name);
+        }
+
+        private void InitCreateFormFields()
+        {
+            InitFamilyStatusCreateForm();
+            InitHeightCreateForm();
+            InitRegionCreateForm();
+            InitReligiousLevelCreateForm();
+            InitGenderCreateForm();
+            InitPerformanceCreateForm();
+            InitOccupationCreateForm();
+            InitEducationCreateForm();
+            InitMyCharacteristicsCreateForm();
+            InitSpouseCharacteristicsCreateForm();
+        }
+
+        private void InitOccupationCreateForm()
+        {
+            OccupationType occupationType = new OccupationType();
+            BindControlData(comboBoxOccupation, occupationType);
+        }
+
+        private void InitFamilyStatusCreateForm()
+        {
+            FamilyStatusType familyStatusType = new FamilyStatusType();
+            BindControlData(comboBoxFamilyStatus, familyStatusType);
+        }
+
+        private void InitSpouseCharacteristicsCreateForm()
+        {
+            CharacteristicsType characteristicsType = new CharacteristicsType();
+            BindControlData(checkedListBoxSpouseCharacteristics, characteristicsType);
+        }
+
+        private void InitMyCharacteristicsCreateForm()
+        {
+            CharacteristicsType characteristicsType = new CharacteristicsType();
+            BindControlData(checkedListBoxMyCharacteristics, characteristicsType);
+        }
+
+        private void InitEducationCreateForm()
+        {
+            EducationType educationType = new EducationType();
+            BindControlData(checkedListBoxEducation2, educationType);
+        }
+
+        private void InitPerformanceCreateForm()
+        {
+            PerformanceType performanceType = new PerformanceType();
+            BindControlData(comboBoxPerformance, performanceType);
+        }
+
+        private void InitGenderCreateForm()
+        {
+            GenderType genderType = new GenderType();
+            BindControlData(comboBoxGender2, genderType);
+        }
+
+        private void InitReligiousLevelCreateForm()
+        {
+            ReligiousType relType = new ReligiousType();
+            BindControlData(comboBoxRelLevel, relType);
+        }
+
+        private void InitRegionCreateForm()
+        {
+            ResidentialAreaPrimaryType residentialAreaPrimaryType = new ResidentialAreaPrimaryType();
+            BindControlData(comboBoxRegion, residentialAreaPrimaryType);
+        }
+
+        private void InitHeightCreateForm()
+        {
+            HeightType heightType = new HeightType();
+            BindControlData(comboBoxHeight, heightType);
         }
 
         private void buttonShowUpdateForm_Click(object sender, EventArgs e)
@@ -558,17 +652,21 @@ namespace ShevaDorot
 
         private async void logoutToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //TODO: change this - get admin list from firebaseDBManager
             var admins = await firebaseDBManager.FirebaseClient.Child("admins").OnceAsync<Admin>();
 
-            string userName = Settings.Default.Password;
-            string password = Settings.Default.UserName;
+
+            string password = Settings.Default.Password;
+            string userName = Settings.Default.UserName;
 
             Admin admin = admins.Where(a => a.Object?.UserName == userName && a.Object?.Password == password).FirstOrDefault().Object;
 
             if (admin != null)
             {
                 admin.IsLoggedIn = "0";
-                await firebaseDBManager.FirebaseClient.Child("admins").PostAsync(admin);
+
+                //TODO: change this - update logout inside firebaseDBManager
+                await firebaseDBManager.FirebaseClient.Child("admins/" + admin.Id).PutAsync(admin);
             }
 
             Settings.Default.UserName = string.Empty;
@@ -604,12 +702,12 @@ namespace ShevaDorot
                     try
                     {
                         //firebaseDBManager.DeleteUserPhoto(selectedUser);
-                        string downloadUrl = await firebaseDBManager.insertUserNewPhoto(selectedUser, file);
+                        string downloadUrl = await firebaseDBManager.InsertUserNewPhoto(selectedUser, file);
                         Image image = new Image(textBoxImageUrl.Text);
                         image.url = downloadUrl;
                         selectedUser.images[0] = image;
                         selectedUser.profile_image_id = downloadUrl;
-                        firebaseDBManager.updateUser(selectedUser);
+                        firebaseDBManager.UpdateUser(selectedUser);
                     }
                     catch (Exception ex)
                     {

@@ -37,7 +37,7 @@
             System.Windows.Forms.Label label8;
             System.Windows.Forms.Label label9;
             System.Windows.Forms.Label labelFamilyStatus2;
-            System.Windows.Forms.Label label2;
+            System.Windows.Forms.Label labelBirthday;
             System.Windows.Forms.Label label3;
             System.Windows.Forms.Label label4;
             System.Windows.Forms.Label label5;
@@ -48,6 +48,8 @@
             this.tabControlMain = new System.Windows.Forms.TabControl();
             this.tabPageSearch = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.comboBoxHeightTo = new System.Windows.Forms.ComboBox();
+            this.comboBoxHeightFrom = new System.Windows.Forms.ComboBox();
             this.checkedListBoxSmokingHabits = new System.Windows.Forms.CheckedListBox();
             this.labelSmokingHabits = new System.Windows.Forms.Label();
             this.checkedListBoxEconomicStatus = new System.Windows.Forms.CheckedListBox();
@@ -104,6 +106,8 @@
             this.textBoxEmail = new System.Windows.Forms.TextBox();
             this.textBoxPhoneNumber = new System.Windows.Forms.TextBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.dateTimePickerBirthday = new System.Windows.Forms.DateTimePicker();
+            this.textBoxAge = new System.Windows.Forms.TextBox();
             this.comboBoxHeight = new System.Windows.Forms.ComboBox();
             this.comboBoxGender2 = new System.Windows.Forms.ComboBox();
             this.comboBoxRelLevel = new System.Windows.Forms.ComboBox();
@@ -111,7 +115,6 @@
             this.comboBoxFamilyStatus = new System.Windows.Forms.ComboBox();
             this.pictureBoxUserImage = new System.Windows.Forms.PictureBox();
             this.textBoxImageUrl = new System.Windows.Forms.TextBox();
-            this.textBoxAge = new System.Windows.Forms.TextBox();
             this.buttonChooseImage = new System.Windows.Forms.Button();
             this.textBoxLastName = new System.Windows.Forms.TextBox();
             this.textBoxFirstName = new System.Windows.Forms.TextBox();
@@ -122,8 +125,6 @@
             this.loginToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.comboBoxHeightFrom = new System.Windows.Forms.ComboBox();
-            this.comboBoxHeightTo = new System.Windows.Forms.ComboBox();
             labelOccupation = new System.Windows.Forms.Label();
             labelEducation2 = new System.Windows.Forms.Label();
             labelPerformance = new System.Windows.Forms.Label();
@@ -132,7 +133,7 @@
             label8 = new System.Windows.Forms.Label();
             label9 = new System.Windows.Forms.Label();
             labelFamilyStatus2 = new System.Windows.Forms.Label();
-            label2 = new System.Windows.Forms.Label();
+            labelBirthday = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
             label4 = new System.Windows.Forms.Label();
             label5 = new System.Windows.Forms.Label();
@@ -231,14 +232,14 @@
             labelFamilyStatus2.TabIndex = 38;
             labelFamilyStatus2.Text = "Family Status :";
             // 
-            // label2
+            // labelBirthday
             // 
-            label2.AutoSize = true;
-            label2.Location = new System.Drawing.Point(6, 80);
-            label2.Name = "label2";
-            label2.Size = new System.Drawing.Size(29, 13);
-            label2.TabIndex = 8;
-            label2.Text = "Age:";
+            labelBirthday.AutoSize = true;
+            labelBirthday.Location = new System.Drawing.Point(6, 80);
+            labelBirthday.Name = "labelBirthday";
+            labelBirthday.Size = new System.Drawing.Size(51, 13);
+            labelBirthday.TabIndex = 8;
+            labelBirthday.Text = "Birthday :";
             // 
             // label3
             // 
@@ -365,6 +366,22 @@
             this.splitContainer1.SplitterDistance = 500;
             this.splitContainer1.SplitterWidth = 10;
             this.splitContainer1.TabIndex = 1;
+            // 
+            // comboBoxHeightTo
+            // 
+            this.comboBoxHeightTo.FormattingEnabled = true;
+            this.comboBoxHeightTo.Location = new System.Drawing.Point(451, 101);
+            this.comboBoxHeightTo.Name = "comboBoxHeightTo";
+            this.comboBoxHeightTo.Size = new System.Drawing.Size(68, 21);
+            this.comboBoxHeightTo.TabIndex = 50;
+            // 
+            // comboBoxHeightFrom
+            // 
+            this.comboBoxHeightFrom.FormattingEnabled = true;
+            this.comboBoxHeightFrom.Location = new System.Drawing.Point(328, 101);
+            this.comboBoxHeightFrom.Name = "comboBoxHeightFrom";
+            this.comboBoxHeightFrom.Size = new System.Drawing.Size(68, 21);
+            this.comboBoxHeightFrom.TabIndex = 49;
             // 
             // checkedListBoxSmokingHabits
             // 
@@ -918,6 +935,8 @@
             // groupBox4
             // 
             this.groupBox4.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.groupBox4.Controls.Add(this.dateTimePickerBirthday);
+            this.groupBox4.Controls.Add(this.textBoxAge);
             this.groupBox4.Controls.Add(this.comboBoxHeight);
             this.groupBox4.Controls.Add(this.comboBoxGender2);
             this.groupBox4.Controls.Add(this.comboBoxRelLevel);
@@ -926,10 +945,9 @@
             this.groupBox4.Controls.Add(labelGender2);
             this.groupBox4.Controls.Add(this.pictureBoxUserImage);
             this.groupBox4.Controls.Add(this.textBoxImageUrl);
-            this.groupBox4.Controls.Add(this.textBoxAge);
             this.groupBox4.Controls.Add(this.buttonChooseImage);
             this.groupBox4.Controls.Add(labelFamilyStatus2);
-            this.groupBox4.Controls.Add(label2);
+            this.groupBox4.Controls.Add(labelBirthday);
             this.groupBox4.Controls.Add(this.textBoxLastName);
             this.groupBox4.Controls.Add(label3);
             this.groupBox4.Controls.Add(this.textBoxFirstName);
@@ -944,12 +962,32 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Basic Info";
             // 
+            // dateTimePickerBirthday
+            // 
+            this.dateTimePickerBirthday.CustomFormat = "dd-MM-yyyy";
+            this.dateTimePickerBirthday.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dateTimePickerBirthday.Location = new System.Drawing.Point(125, 74);
+            this.dateTimePickerBirthday.Name = "dateTimePickerBirthday";
+            this.dateTimePickerBirthday.Size = new System.Drawing.Size(104, 20);
+            this.dateTimePickerBirthday.TabIndex = 50;
+            this.dateTimePickerBirthday.Value = new System.DateTime(2017, 4, 5, 0, 0, 0, 0);
+            this.dateTimePickerBirthday.ValueChanged += new System.EventHandler(this.dateTimePickerBirthday_ValueChanged);
+            // 
+            // textBoxAge
+            // 
+            this.textBoxAge.Enabled = false;
+            this.textBoxAge.Location = new System.Drawing.Point(231, 74);
+            this.textBoxAge.Name = "textBoxAge";
+            this.textBoxAge.Size = new System.Drawing.Size(31, 20);
+            this.textBoxAge.TabIndex = 49;
+            this.textBoxAge.Text = "0";
+            // 
             // comboBoxHeight
             // 
             this.comboBoxHeight.FormattingEnabled = true;
             this.comboBoxHeight.Location = new System.Drawing.Point(125, 126);
             this.comboBoxHeight.Name = "comboBoxHeight";
-            this.comboBoxHeight.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxHeight.Size = new System.Drawing.Size(137, 21);
             this.comboBoxHeight.TabIndex = 48;
             // 
             // comboBoxGender2
@@ -957,7 +995,7 @@
             this.comboBoxGender2.FormattingEnabled = true;
             this.comboBoxGender2.Location = new System.Drawing.Point(125, 208);
             this.comboBoxGender2.Name = "comboBoxGender2";
-            this.comboBoxGender2.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxGender2.Size = new System.Drawing.Size(137, 21);
             this.comboBoxGender2.TabIndex = 47;
             // 
             // comboBoxRelLevel
@@ -965,7 +1003,7 @@
             this.comboBoxRelLevel.FormattingEnabled = true;
             this.comboBoxRelLevel.Location = new System.Drawing.Point(125, 181);
             this.comboBoxRelLevel.Name = "comboBoxRelLevel";
-            this.comboBoxRelLevel.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxRelLevel.Size = new System.Drawing.Size(137, 21);
             this.comboBoxRelLevel.TabIndex = 46;
             // 
             // comboBoxRegion
@@ -973,7 +1011,7 @@
             this.comboBoxRegion.FormattingEnabled = true;
             this.comboBoxRegion.Location = new System.Drawing.Point(125, 153);
             this.comboBoxRegion.Name = "comboBoxRegion";
-            this.comboBoxRegion.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxRegion.Size = new System.Drawing.Size(137, 21);
             this.comboBoxRegion.TabIndex = 45;
             // 
             // comboBoxFamilyStatus
@@ -982,7 +1020,7 @@
             this.comboBoxFamilyStatus.FormattingEnabled = true;
             this.comboBoxFamilyStatus.Location = new System.Drawing.Point(125, 99);
             this.comboBoxFamilyStatus.Name = "comboBoxFamilyStatus";
-            this.comboBoxFamilyStatus.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxFamilyStatus.Size = new System.Drawing.Size(137, 21);
             this.comboBoxFamilyStatus.TabIndex = 44;
             this.comboBoxFamilyStatus.ValueMember = "Status";
             // 
@@ -1003,13 +1041,6 @@
             this.textBoxImageUrl.Size = new System.Drawing.Size(127, 20);
             this.textBoxImageUrl.TabIndex = 7;
             // 
-            // textBoxAge
-            // 
-            this.textBoxAge.Location = new System.Drawing.Point(125, 73);
-            this.textBoxAge.Name = "textBoxAge";
-            this.textBoxAge.Size = new System.Drawing.Size(121, 20);
-            this.textBoxAge.TabIndex = 2;
-            // 
             // buttonChooseImage
             // 
             this.buttonChooseImage.Location = new System.Drawing.Point(547, 209);
@@ -1025,14 +1056,14 @@
             // 
             this.textBoxLastName.Location = new System.Drawing.Point(125, 46);
             this.textBoxLastName.Name = "textBoxLastName";
-            this.textBoxLastName.Size = new System.Drawing.Size(121, 20);
+            this.textBoxLastName.Size = new System.Drawing.Size(137, 20);
             this.textBoxLastName.TabIndex = 1;
             // 
             // textBoxFirstName
             // 
             this.textBoxFirstName.Location = new System.Drawing.Point(125, 19);
             this.textBoxFirstName.Name = "textBoxFirstName";
-            this.textBoxFirstName.Size = new System.Drawing.Size(121, 20);
+            this.textBoxFirstName.Size = new System.Drawing.Size(137, 20);
             this.textBoxFirstName.TabIndex = 0;
             // 
             // buttonCreate
@@ -1093,22 +1124,6 @@
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
-            // comboBoxHeightFrom
-            // 
-            this.comboBoxHeightFrom.FormattingEnabled = true;
-            this.comboBoxHeightFrom.Location = new System.Drawing.Point(328, 101);
-            this.comboBoxHeightFrom.Name = "comboBoxHeightFrom";
-            this.comboBoxHeightFrom.Size = new System.Drawing.Size(68, 21);
-            this.comboBoxHeightFrom.TabIndex = 49;
-            // 
-            // comboBoxHeightTo
-            // 
-            this.comboBoxHeightTo.FormattingEnabled = true;
-            this.comboBoxHeightTo.Location = new System.Drawing.Point(451, 101);
-            this.comboBoxHeightTo.Name = "comboBoxHeightTo";
-            this.comboBoxHeightTo.Size = new System.Drawing.Size(68, 21);
-            this.comboBoxHeightTo.TabIndex = 50;
             // 
             // FormMain
             // 
@@ -1181,7 +1196,6 @@
         private System.Windows.Forms.Button buttonSearch;
         private System.Windows.Forms.BindingSource bindingSourceSearch;
         private System.Windows.Forms.DataGridView dataGridViewSearch;
-        private System.Windows.Forms.TextBox textBoxAge;
         private System.Windows.Forms.Button buttonShowUpdateForm;
         private System.Windows.Forms.Button buttonShowCreateForm;
         private System.Windows.Forms.ToolStrip toolStripTop;
@@ -1230,6 +1244,8 @@
         private System.Windows.Forms.CheckedListBox checkedListBoxEducation2;
         private System.Windows.Forms.ComboBox comboBoxHeightTo;
         private System.Windows.Forms.ComboBox comboBoxHeightFrom;
+        private System.Windows.Forms.TextBox textBoxAge;
+        private System.Windows.Forms.DateTimePicker dateTimePickerBirthday;
     }
 }
 

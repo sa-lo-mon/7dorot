@@ -136,10 +136,10 @@ namespace ShevaDorot
                 return;
             }
 
-            bool isInDB = await isEntryInDB();
+            bool isInDB = await IsEntryInDB();
             if (!isInDB)
             {
-                createEntry();
+                CreateEntry();
             }
             else
             {
@@ -173,7 +173,7 @@ namespace ShevaDorot
             */
         }
 
-        private async Task<bool> isEntryInDB()
+        private async Task<bool> IsEntryInDB()
         {
             bool isExist = false;
             var users = await firebaseDBManager.FirebaseClient.Child("users").OnceAsync<User>();
@@ -191,9 +191,9 @@ namespace ShevaDorot
             return isExist;
         }
 
-        private async void createEntry()
+        private async void CreateEntry()
         {
-            User user = getUserFromForm();
+            User user = GetUserFromForm();
             string msg = null;
             try
             {
@@ -212,7 +212,7 @@ namespace ShevaDorot
                     firebaseDBManager.InsertUser(user);
                     msg = string.Format("New user with the name: {0}, was created successfuly!", user.first_name);
 
-                    clearTextBoxControls(panelCreateForm.Controls);
+                    ResetControls(panelCreateForm.Controls);
                 }
             }
             catch (Exception ex)
@@ -223,39 +223,21 @@ namespace ShevaDorot
             MessageBox.Show(msg);
         }
 
-        private User getUserFromForm()
+        private User GetUserFromForm()
         {
             User user = new User();
             user.age = textBoxAge.Text;
+            user.birthday = dateTimePickerBirthday.Text;
             user.performance = (string)comboBoxPerformance.SelectedValue;
-
-            string selectedEducation = "";
-            foreach (KeyValuePair<string, SpinnerData> item in checkedListBoxEducation2.CheckedItems)
-            {
-
-                selectedEducation += item.Key + ",";
-            }
-            user.education = selectedEducation;
             user.email = textBoxEmail.Text;
             user.first_name = textBoxFirstName.Text;
             user.height = (string)comboBoxHeight.SelectedValue;
             //user.profile_image_id = textBoxImageUrl.Text;
             user.last_name = textBoxLastName.Text;
 
-            string selectedCharacteristics = "";
-            foreach (KeyValuePair<string, SpinnerData> item in checkedListBoxMyCharacteristics.CheckedItems)
-            {
-                selectedCharacteristics += item.Key + ",";
-            }
-            user.characteritics = selectedCharacteristics;
-
-            string spouseCharacteristics = "";
-            foreach (KeyValuePair<string, SpinnerData> item in checkedListBoxSpouseCharacteristics.CheckedItems)
-            {
-                spouseCharacteristics += item.Key + ",";
-            }
-            user.spouse_characteritics = spouseCharacteristics;
-
+            user.education = GetKeyCodesFromCheckedLIstBox(checkedListBoxEducation2);
+            user.characteritics = GetKeyCodesFromCheckedLIstBox(checkedListBoxMyCharacteristics); ;
+            user.spouse_characteritics = GetKeyCodesFromCheckedLIstBox(checkedListBoxSpouseCharacteristics);
             user.occupation = (string)comboBoxOccupation.SelectedValue;
             user.phone_number = textBoxPhoneNumber.Text;
             user.region = (string)comboBoxRegion.SelectedValue;
@@ -265,7 +247,19 @@ namespace ShevaDorot
             return user;
         }
 
-        private void clearTextBoxControls(Control.ControlCollection controls)
+        private string GetKeyCodesFromCheckedLIstBox(CheckedListBox checkedListBox)
+        {
+            string res = "";
+            foreach (KeyValuePair<string, SpinnerData> item in checkedListBox.CheckedItems)
+            {
+
+                res += item.Key + ",";
+            }
+
+            return res;
+        }
+
+        private void ResetControls(Control.ControlCollection controls)
         {
             if (controls == null)
                 return;
@@ -276,13 +270,31 @@ namespace ShevaDorot
                 {
                     control.Text = string.Empty;
                 }
+                else if (control is CheckBox)
+                {
+                    ((CheckBox)control).Checked = false;
+                }
+                else if (control is ComboBox)
+                {
+                    ((ComboBox)control).SelectedItem = null;
+                }
+                else if (control is ListBox)
+                {
+                    ((ListBox)control).ClearSelected();
+
+                    foreach (int index in ((CheckedListBox)control).CheckedIndices)
+                    {
+                        ((CheckedListBox)control).SetItemChecked(index, false);
+                    }
+
+                }
                 else if (control is PictureBox)
                 {
                     ((PictureBox)control).Image = null;
                 }
                 else if (control is Panel || control is GroupBox)
                 {
-                    clearTextBoxControls(control.Controls);
+                    ResetControls(control.Controls);
                 }
             }
         }
@@ -547,61 +559,48 @@ namespace ShevaDorot
         private void LoadCreateFormFromUser(User user)
         {
             textBoxAge.Text = user.age;
-            comboBoxPerformance.SelectedValue = user.performance;
+            DateTime birthDate;
+            dateTimePickerBirthday.Value = (DateTime.TryParse(user.birthday, out birthDate) ? birthDate : DateTime.Now);
 
             textBoxEmail.Text = user.email;
             textBoxFirstName.Text = user.first_name;
-            comboBoxHeight.SelectedValue = user.height;
-
             //textBoxImageUrl.Text = user.profile_image_id;
             textBoxLastName.Text = user.last_name;
-            comboBoxOccupation.SelectedValue = user.occupation;
             textBoxPhoneNumber.Text = user.phone_number;
-            comboBoxRegion.SelectedValue = user.region;
-            comboBoxRelLevel.SelectedValue = user.religious_level;
-            comboBoxFamilyStatus.SelectedValue = user.status;
-            comboBoxGender2.SelectedValue = user.gender;
+
+            SetComboBoxValue(comboBoxOccupation, user.occupation);
+            SetComboBoxValue(comboBoxHeight, user.height);
+            SetComboBoxValue(comboBoxPerformance, user.performance);
+            SetComboBoxValue(comboBoxRegion, user.region);
+            SetComboBoxValue(comboBoxRelLevel, user.religious_level);
+            SetComboBoxValue(comboBoxFamilyStatus, user.status);
+            SetComboBoxValue(comboBoxGender2, user.gender);
 
             CheckCheckedkListBoxByString(checkedListBoxEducation2, user.education);
             CheckCheckedkListBoxByString(checkedListBoxMyCharacteristics, user.characteritics);
             CheckCheckedkListBoxByString(checkedListBoxSpouseCharacteristics, user.spouse_characteritics);
         }
 
-        private void CheckCheckedkListBoxByString(CheckedListBox checkedListBox, string selectedIndices)
+        private void SetComboBoxValue(ComboBox comboBox, string value)
         {
-            string[] indices = selectedIndices.Split(',');
-            for (int i = 0; i < checkedListBox.Items.Count; i++)
+            if (value != null)
             {
-                KeyValuePair<string, SpinnerData> item = (KeyValuePair<string, SpinnerData>)checkedListBox.Items[i];
-                if (!string.IsNullOrEmpty(indices.FirstOrDefault(s => s.Equals(item.Key))))
-                {
-                    checkedListBox.SetItemChecked(i, true);
-                }
+                comboBox.SelectedValue = value;
             }
         }
 
-        private void ResetControls(Control contorl)
+        private void CheckCheckedkListBoxByString(CheckedListBox checkedListBox, string selectedIndices)
         {
-            if (contorl == null)
-                return;
+            if (string.IsNullOrEmpty(selectedIndices)) return;
 
-            if (contorl is TextBox)
+            KeyValuePair<string, SpinnerData> item;
+            string[] indices = selectedIndices.Split(',');
+            for (int i = 0; i < checkedListBox.Items.Count; i++)
             {
-                (contorl as TextBox).ResetText();
-            }
-            else if (contorl is ComboBox)
-            {
-                (contorl as ComboBox).SelectedIndex = -1;
-            }
-            else if (contorl is ListBox)
-            {
-                (contorl as ListBox).ClearSelected();
-            }
-            else
-            {
-                foreach (Control ctrl in contorl.Controls)
+                item = (KeyValuePair<string, SpinnerData>)checkedListBox.Items[i];
+                if (!string.IsNullOrEmpty(indices.FirstOrDefault(s => s.Equals(item.Key))))
                 {
-                    ResetControls(ctrl);
+                    checkedListBox.SetItemChecked(i, true);
                 }
             }
         }
@@ -610,8 +609,8 @@ namespace ShevaDorot
         {
             tabPageCreate.Enabled = true;
 
-            // clear all text boxes in "create/update form"
-            clearTextBoxControls(panelCreateForm.Controls);
+            // init all contorls in "create/update form"
+            ResetControls(panelCreateForm.Controls);
             buttonUpdate.Hide();
             buttonCreate.Show();
             InitCreateFormFields();
@@ -794,6 +793,27 @@ namespace ShevaDorot
             // so only a change to 'FileName' property will cause 
             // creating the file in picasa album gallery
             openFileDialogUserImage.FileName = string.Empty;
+        }
+
+        private void dateTimePickerBirthday_ValueChanged(object sender, EventArgs e)
+        {
+            DateTime date = dateTimePickerBirthday.Value;
+            CalculateAgeFromDateTime(date).ToString();
+            textBoxAge.Text = CalculateAgeFromDateTime(date).ToString();
+        }
+
+        private int CalculateAgeFromDateTime(DateTime dateOfBirth)
+        {
+            if (dateOfBirth == null) return 0;
+
+            //long ageInMillis = DateTime.Now.Ticks - date.Ticks;
+            //double ageInSecs = ageInMillis / 1000;
+            //double years = (double)Math.Floor(ageInSecs / 31536000);
+            //return years.ToString();
+
+            int now = int.Parse(DateTime.Now.ToString("yyyyMMdd"));
+            int dob = int.Parse(dateOfBirth.ToString("yyyyMMdd"));
+            return ((now - dob) / 10000);
         }
     }
 }

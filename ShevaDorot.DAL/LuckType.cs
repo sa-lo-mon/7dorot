@@ -15,6 +15,7 @@ namespace ShevaDorot.DAL
         public override Dictionary<string, SpinnerData> GetTypes()
         {
             return new Dictionary<string, SpinnerData>() {
+            {"0", new LuckType("0", "בחר...")},
             {"1", new LuckType("1", "אריה")},
             {"2", new LuckType("2", "בתולה")},
             {"3", new LuckType("3", "גדי")},

@@ -10,7 +10,7 @@ namespace ShevaDorot.DAL
 
         public SmokingHabitType(string id, string name) : base(id, name) { }
 
-         public override Dictionary<string, SpinnerData> GetTypes()
+        public override Dictionary<string, SpinnerData> GetTypes()
         {
             return new Dictionary<string, SpinnerData>(){
             {"1",new SmokingHabitType("1", "לא מעשן/ת")},

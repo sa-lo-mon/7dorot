@@ -1,5 +1,4 @@
 ﻿using Firebase.Database;
-using Firebase.Storage;
 using ShevaDorot.DAL;
 using ShevaDorot.Properties;
 using System;
@@ -33,18 +32,9 @@ namespace ShevaDorot
             dataGridViewSearch.DataSource = bindingSourceSearch;
         }
 
-        private async Task<string> GetDownloadImageUrl(FirebaseStorageReference storageRef, string userName)
-        {
-            if (storageRef == null) return null;
-
-            var task = storageRef.Child(userName + ".jpg")
-                .GetDownloadUrlAsync();
-
-            return await task;
-        }
-
         private void InitializeSearchFormControls()
         {
+            InitHeightSearchForm();
             InitReligiousLevelSearchForm();
             InitGenderSearchForm();
             InitFamilyStatusSearchForm();
@@ -60,6 +50,13 @@ namespace ShevaDorot
             contorl.DataSource = new BindingSource(data.GetTypes(), null);
             contorl.DisplayMember = "Value";
             contorl.ValueMember = "Key";
+        }
+
+        private void InitHeightSearchForm()
+        {
+            HeightType heightType = new HeightType();
+            BindControlData(comboBoxHeightFrom, heightType);
+            BindControlData(comboBoxHeightTo, heightType);
         }
 
         private void InitSmokingHabitsSearchForm()
@@ -393,28 +390,105 @@ namespace ShevaDorot
 
         private void dataGridViewSearch_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (dataGridViewSearch.Columns[e.ColumnIndex].Name == "profileimageidDataGridViewTextBoxColumn")
+            User user = (User)dataGridViewSearch.Rows[e.RowIndex].DataBoundItem;
+
+            switch (dataGridViewSearch.Columns[e.ColumnIndex].Name)
             {
-                if (usersImages == null)
+                case "smokinghabitsDataGridViewTextBoxColumn": FormatSmokingHabitsCell(user, e); break;
+                case "luckDataGridViewTextBoxColumn": FormatLuckCell(user, e); break;
+                case "educationDataGridViewTextBoxColumn": FormatEducationCell(user, e); break;
+                case "religiouslevelDataGridViewTextBoxColumn": FormatReligiousLevelCell(user, e); break;
+                case "familystatusDataGridViewTextBoxColumn": FormatFamilyStatusCell(user, e); break;
+                case "profileimageidDataGridViewTextBoxColumn": FormatProfileImageCell(user, e); break;
+                default: break;
+            }
+        }
+
+        private void FormatSmokingHabitsCell(User user, DataGridViewCellFormattingEventArgs e)
+        {
+            if (string.IsNullOrEmpty(user.smoking_habits)) return;
+
+            string value = GetSpinnerDataCodeValue(user.smoking_habits, new SmokingHabitType());
+            e.Value = value;
+            e.FormattingApplied = true;
+        }
+
+        private void FormatLuckCell(User user, DataGridViewCellFormattingEventArgs e)
+        {
+            if (string.IsNullOrEmpty(user.luck)) return;
+
+            string value = GetSpinnerDataCodeValue(user.luck, new LuckType());
+            e.Value = value;
+            e.FormattingApplied = true;
+        }
+
+        private void FormatEducationCell(User user, DataGridViewCellFormattingEventArgs e)
+        {
+            if (string.IsNullOrEmpty(user.education)) return;
+
+            string value = GetSpinnerDataCodeValue(user.education, new EducationType());
+            e.Value = value;
+            e.FormattingApplied = true;
+        }
+
+        private string GetSpinnerDataCodeValue(string code, SpinnerData spinnerData)
+        {
+            string[] codes = code.Split(',');
+            Dictionary<string, SpinnerData> dictionary = spinnerData.GetTypes();
+            string value = "";
+            foreach (string keyCode in codes)
+            {
+                SpinnerData data;
+                dictionary.TryGetValue(keyCode, out data);
+                if (data != null)
                 {
-                    e.Value = null;
+                    value += data.name + ",";
                 }
-                else
+            }
+
+            if (!string.IsNullOrEmpty(value))
+                value = value.Substring(0, value.Length - 1);
+            return value;
+        }
+
+        private void FormatReligiousLevelCell(User user, DataGridViewCellFormattingEventArgs e)
+        {
+            if (string.IsNullOrEmpty(user.religious_level)) return;
+
+            string value = GetSpinnerDataCodeValue(user.religious_level, new ReligiousType());
+            e.Value = value;
+            e.FormattingApplied = true;
+        }
+
+        private void FormatFamilyStatusCell(User user, DataGridViewCellFormattingEventArgs e)
+        {
+            if (string.IsNullOrEmpty(user.family_status)) return;
+
+            string value = GetSpinnerDataCodeValue(user.family_status, new FamilyStatusType());
+            e.Value = value;
+            e.FormattingApplied = true;
+        }
+
+        private void FormatProfileImageCell(User user, DataGridViewCellFormattingEventArgs e)
+        {
+            if (usersImages == null)
+            {
+                e.Value = null;
+            }
+            else
+            {
+                try
                 {
-                    User user = (User)dataGridViewSearch.Rows[e.RowIndex].DataBoundItem;
-                    try
+                    if (!string.IsNullOrEmpty(user.profile_image_id) && usersImages[user.profile_image_id] != null)
                     {
-                        if (!string.IsNullOrEmpty(user.profile_image_id) && usersImages[user.profile_image_id] != null)
-                        {
-                            e.Value = usersImages[user.profile_image_id];
-                            e.FormattingApplied = true;
-                        }
+                        e.Value = usersImages[user.profile_image_id];
+                        e.FormattingApplied = true;
                     }
-                    catch (KeyNotFoundException ex)
-                    {
-                        //key not found
-                        Console.WriteLine(ex.Message);
-                    }
+                }
+                catch (KeyNotFoundException ex)
+                {
+                    //key not found
+                    Console.WriteLine(ex.Message);
                 }
             }
         }
@@ -474,7 +548,7 @@ namespace ShevaDorot
         {
             textBoxAge.Text = user.age;
             comboBoxPerformance.SelectedValue = user.performance;
-            
+
             textBoxEmail.Text = user.email;
             textBoxFirstName.Text = user.first_name;
             comboBoxHeight.SelectedValue = user.height;

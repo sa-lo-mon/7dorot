@@ -4,6 +4,9 @@ namespace ShevaDorot.DAL
 {
     public class LuckType : SpinnerData
     {
+        public LuckType()
+        {
+        }
 
         public LuckType(string id, string name)
             : base(id, name)

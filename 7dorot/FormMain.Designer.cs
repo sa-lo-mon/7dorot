@@ -64,8 +64,6 @@
             this.label17 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
-            this.numericUpDownHeightMax = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownHeightMin = new System.Windows.Forms.NumericUpDown();
             this.checkedListBoxFamilyStatus = new System.Windows.Forms.CheckedListBox();
             this.buttonClearSearch = new System.Windows.Forms.Button();
             this.buttonShowUpdateForm = new System.Windows.Forms.Button();
@@ -124,6 +122,8 @@
             this.loginToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.comboBoxHeightFrom = new System.Windows.Forms.ComboBox();
+            this.comboBoxHeightTo = new System.Windows.Forms.ComboBox();
             labelOccupation = new System.Windows.Forms.Label();
             labelEducation2 = new System.Windows.Forms.Label();
             labelPerformance = new System.Windows.Forms.Label();
@@ -145,8 +145,6 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeightMax)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeightMin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownUntilAge)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFrom)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewSearch)).BeginInit();
@@ -328,6 +326,8 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.comboBoxHeightTo);
+            this.splitContainer1.Panel1.Controls.Add(this.comboBoxHeightFrom);
             this.splitContainer1.Panel1.Controls.Add(this.checkedListBoxSmokingHabits);
             this.splitContainer1.Panel1.Controls.Add(this.labelSmokingHabits);
             this.splitContainer1.Panel1.Controls.Add(this.checkedListBoxEconomicStatus);
@@ -344,8 +344,6 @@
             this.splitContainer1.Panel1.Controls.Add(this.label17);
             this.splitContainer1.Panel1.Controls.Add(this.label10);
             this.splitContainer1.Panel1.Controls.Add(this.label16);
-            this.splitContainer1.Panel1.Controls.Add(this.numericUpDownHeightMax);
-            this.splitContainer1.Panel1.Controls.Add(this.numericUpDownHeightMin);
             this.splitContainer1.Panel1.Controls.Add(this.checkedListBoxFamilyStatus);
             this.splitContainer1.Panel1.Controls.Add(this.buttonClearSearch);
             this.splitContainer1.Panel1.Controls.Add(this.buttonShowUpdateForm);
@@ -491,7 +489,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(402, 103);
+            this.label10.Location = new System.Drawing.Point(419, 103);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(26, 13);
             this.label10.TabIndex = 17;
@@ -505,50 +503,6 @@
             this.label16.Size = new System.Drawing.Size(67, 13);
             this.label16.TabIndex = 16;
             this.label16.Text = "Height (cm) :";
-            // 
-            // numericUpDownHeightMax
-            // 
-            this.numericUpDownHeightMax.Location = new System.Drawing.Point(431, 101);
-            this.numericUpDownHeightMax.Maximum = new decimal(new int[] {
-            210,
-            0,
-            0,
-            0});
-            this.numericUpDownHeightMax.Minimum = new decimal(new int[] {
-            130,
-            0,
-            0,
-            0});
-            this.numericUpDownHeightMax.Name = "numericUpDownHeightMax";
-            this.numericUpDownHeightMax.Size = new System.Drawing.Size(65, 20);
-            this.numericUpDownHeightMax.TabIndex = 15;
-            this.numericUpDownHeightMax.Value = new decimal(new int[] {
-            130,
-            0,
-            0,
-            0});
-            // 
-            // numericUpDownHeightMin
-            // 
-            this.numericUpDownHeightMin.Location = new System.Drawing.Point(331, 101);
-            this.numericUpDownHeightMin.Maximum = new decimal(new int[] {
-            210,
-            0,
-            0,
-            0});
-            this.numericUpDownHeightMin.Minimum = new decimal(new int[] {
-            130,
-            0,
-            0,
-            0});
-            this.numericUpDownHeightMin.Name = "numericUpDownHeightMin";
-            this.numericUpDownHeightMin.Size = new System.Drawing.Size(65, 20);
-            this.numericUpDownHeightMin.TabIndex = 14;
-            this.numericUpDownHeightMin.Value = new decimal(new int[] {
-            130,
-            0,
-            0,
-            0});
             // 
             // checkedListBoxFamilyStatus
             // 
@@ -1024,6 +978,7 @@
             // 
             // comboBoxFamilyStatus
             // 
+            this.comboBoxFamilyStatus.DisplayMember = "Status";
             this.comboBoxFamilyStatus.FormattingEnabled = true;
             this.comboBoxFamilyStatus.Location = new System.Drawing.Point(125, 99);
             this.comboBoxFamilyStatus.Name = "comboBoxFamilyStatus";
@@ -1139,6 +1094,22 @@
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
+            // comboBoxHeightFrom
+            // 
+            this.comboBoxHeightFrom.FormattingEnabled = true;
+            this.comboBoxHeightFrom.Location = new System.Drawing.Point(328, 101);
+            this.comboBoxHeightFrom.Name = "comboBoxHeightFrom";
+            this.comboBoxHeightFrom.Size = new System.Drawing.Size(68, 21);
+            this.comboBoxHeightFrom.TabIndex = 49;
+            // 
+            // comboBoxHeightTo
+            // 
+            this.comboBoxHeightTo.FormattingEnabled = true;
+            this.comboBoxHeightTo.Location = new System.Drawing.Point(451, 101);
+            this.comboBoxHeightTo.Name = "comboBoxHeightTo";
+            this.comboBoxHeightTo.Size = new System.Drawing.Size(68, 21);
+            this.comboBoxHeightTo.TabIndex = 50;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1156,8 +1127,6 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeightMax)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeightMin)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownUntilAge)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFrom)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewSearch)).EndInit();
@@ -1241,8 +1210,6 @@
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.NumericUpDown numericUpDownHeightMax;
-        private System.Windows.Forms.NumericUpDown numericUpDownHeightMin;
         private System.Windows.Forms.CheckedListBox checkedListBoxPrayerFrequency;
         private System.Windows.Forms.Label labelPrayerFrequency;
         private System.Windows.Forms.CheckedListBox checkedListBoxReligiousLevel;
@@ -1261,6 +1228,8 @@
         private System.Windows.Forms.CheckedListBox checkedListBoxMyCharacteristics;
         private System.Windows.Forms.ComboBox comboBoxOccupation;
         private System.Windows.Forms.CheckedListBox checkedListBoxEducation2;
+        private System.Windows.Forms.ComboBox comboBoxHeightTo;
+        private System.Windows.Forms.ComboBox comboBoxHeightFrom;
     }
 }
 
